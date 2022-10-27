@@ -1,12 +1,10 @@
 import styles from "../../styles/Home.module.css"
 import Image from "next/image";
-import { useRouter } from "next/router";
-import data from '../../data/data.json'
+import { useRouter } from "next/router"; 
 
-const Product = () => {
+const Product = ({product}) => {
     const router = useRouter();
     const { id } = router.query;
-    const product = data.find(obj => obj.id == id)
 
     return (
         <div className={styles.main}>
@@ -20,3 +18,22 @@ const Product = () => {
 }
 
 export default Product
+
+export async function getStaticPaths() {
+    const products = await fetch('https://fakestoreapi.com/products')
+                        .then(res=>res.json());
+
+    const paths = products.map((product) => ({
+        params: { id: `${product.id}` },
+    }))
+    return { paths, fallback: false }
+}
+export async function getStaticProps({ params }) {
+    const products = await fetch('https://fakestoreapi.com/products')
+    .then(res=>res.json());
+
+    const getProductById = (id) => products.find(obj => obj.id == id)
+    // the params comes from getStaticPath
+    const product = await getProductById(params.id)
+    return { props: { product } }
+}

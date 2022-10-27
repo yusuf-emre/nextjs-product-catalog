@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import data from '../../data/data.json'
 import Link from "next/link";
 import styles from "../../styles/Home.module.css"
 import Image from 'next/image';
 
-const Products = () => {
+const Products = ({product}) => {
     const [category, setCategory] = useState('all')
 
-    const categoryArr = [...new Set(data.map(p => p.category))]
+    const categoryArr = [...new Set(product.map(p => p.category))]
     categoryArr.unshift('all')
 
     const handleChange = (event) => setCategory(event.target.id)
@@ -30,7 +29,7 @@ const Products = () => {
                 })}
             </div>
             <div className={styles.grid}>
-                {data.filter(prod => category == 'all'
+                {product.filter(prod => category == 'all'
                     ? prod
                     : prod.category == category)
                     .map(value => {
@@ -51,3 +50,13 @@ const Products = () => {
 }
 
 export default Products
+
+export async function getServerSideProps(context) {
+    const product = await fetch('https://fakestoreapi.com/products')
+                        .then(res=>res.json());
+    return {
+        props: {
+            product
+        },
+    }
+}
