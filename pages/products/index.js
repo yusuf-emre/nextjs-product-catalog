@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import Link from "next/link";
 import styles from "../../styles/Home.module.css"
@@ -19,6 +20,7 @@ const Products = ({product}) => {
             <div className={styles.button}>
                 {categoryArr.map(category => {
                     return (
+                        // eslint-disable-next-line react/jsx-key
                         <button
                             id={category}
                             className={styles.card}
@@ -34,6 +36,7 @@ const Products = ({product}) => {
                     : prod.category == category)
                     .map(value => {
                         return (
+                            // eslint-disable-next-line react/jsx-key
                             <Link href={`/products/${value.id}`} >
                                 <div className={styles.card}>
                                     <p>{value.title}</p>
